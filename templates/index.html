@@ -1,1 +1,86 @@
+{% extends "base.html" %}
+{% block title %}מערכת חכמה לשיבוץ סטודנטים{% endblock %}
+
+{% block content %}
+
+<section class="hero">
+  <div class="hero-label">מערכת מתקדמת לשיבוץ אוטומטי</div>
+  <h1>מערכת חכמה לשיבוץ סטודנטים<br>להתמחויות בעבודה סוציאלית</h1>
+  <p class="hero-sub">
+    פתרון אוטומטי ויעיל לשיבוץ סטודנטים למקומות התמחות על בסיס העדפות,
+    מיומנויות ודרישות המוסדות.
+  </p>
+  <div class="hero-actions">
+    <a href="{{ url_for('students_form') }}" class="btn-primary">שאלון סטודנט</a>
+    <a href="{{ url_for('mentors_form') }}" class="btn-ghost">מיפוי מדריכים</a>
+  </div>
+</section>
+
+<section class="steps">
+  <h2>איך זה עובד?</h2>
+  <p class="section-sub">תהליך פשוט ויעיל בשלושה שלבים</p>
+  <div class="steps-grid">
+    <div class="step-card">
+      <div class="step-icon">📝</div>
+      <h3>שלב 1: מילוי שאלונים</h3>
+      <p>
+        סטודנטים ומדריכים ממלאים שאלונים מפורטים על העדפות, כישורים וצרכי המוסד.
+      </p>
+    </div>
+    <div class="step-card">
+      <div class="step-icon">📊</div>
+      <h3>שלב 2: ניתוח נתונים</h3>
+      <p>
+        המערכת אוספת ומנתחת את הנתונים באמצעות אלגוריתמים מתקדמים.
+      </p>
+    </div>
+    <div class="step-card">
+      <div class="step-icon">✅</div>
+      <h3>שלב 3: שיבוץ חכם</h3>
+      <p>
+        שיבוץ אוטומטי ואופטימלי של סטודנטים למקומות התמחות מתאימים.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section class="stats">
+  <h2>סטטיסטיקות המערכת</h2>
+  <p class="section-sub">נתונים עדכניים על השימוש במערכת</p>
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-label">אחוז הצלחה</div>
+      <div class="stat-value">0</div>
+      <div class="stat-desc">שיבוצים מוצלחים</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">שיבוצים בוצעו</div>
+      <div class="stat-value">0</div>
+      <div class="stat-desc">סטודנטים שובצו</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">מדריכים רשומים</div>
+      <div class="stat-value">0</div>
+      <div class="stat-desc">מקומות התמחות במערכת</div>
+    </div>
+    <div class="stat-card stat-highlight">
+      <div class="stat-label">סטודנטים רשומים</div>
+      <div class="stat-value">0</div>
+      <div class="stat-desc">מילאו את השאלון</div>
+    </div>
+  </div>
+</section>
+
+<section class="cta">
+  <h2>מוכנים להתחיל?</h2>
+  <p>
+    הצטרפו למערכת שלנו והפכו את תהליך השיבוץ לפשוט, מהיר ויעיל.
+  </p>
+  <div class="cta-actions">
+    <a href="{{ url_for('students_form') }}" class="btn-light">מילוי שאלון סטודנט</a>
+    <a href="{{ url_for('mentors_form') }}" class="btn-light-outline">מילוי מיפוי מדריך</a>
+  </div>
+</section>
+
+{% endblock %}
 
