@@ -1,1 +1,37 @@
+{% extends "base.html" %}
+{% block title %}יצירת קשר{% endblock %}
+
+{% block content %}
+<section class="contact-page">
+  <h1>יצירת קשר</h1>
+  <p class="section-sub">יש לך שאלות או הערות? נשמח לשמוע ממך.</p>
+
+  <div class="contact-layout">
+    <div class="contact-info-box">
+      <h3>דוא"ל</h3>
+      <p>social@zefat.ac.il</p>
+      <h3>טלפון</h3>
+      <p>04-6821111</p>
+      <h3>כתובת</h3>
+      <p>מכללת צפת, החוג לעבודה סוציאלית</p>
+    </div>
+
+    <form method="post" class="contact-form">
+      <label>שם מלא *</label>
+      <input type="text" name="name" placeholder="הזן שם מלא" required>
+
+      <label>דוא"ל *</label>
+      <input type="email" name="email" placeholder="example@email.com" required>
+
+      <label>נושא *</label>
+      <input type="text" name="subject" placeholder="נושא הפנייה" required>
+
+      <label>הודעה *</label>
+      <textarea name="message" rows="5" placeholder="כתוב כאן את הודעתך..." required></textarea>
+
+      <button type="submit" class="btn-primary full">שלח פנייה ✈</button>
+    </form>
+  </div>
+</section>
+{% endblock %}
 
