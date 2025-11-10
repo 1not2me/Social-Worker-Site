@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}אזור המרצים - מערכת שיבוץ{% endblock %}
+
+{% block content %}
+<section class="login-wrap">
+  <div class="login-card">
+    <div class="login-icon">🎓</div>
+    <h1>אזור המרצים – מערכת שיבוץ אוטומטית</h1>
+    <p class="login-sub">
+      כאן תוכלו לגשת לכלים, קישורים וטפסים המיועדים לצוות המרצים בלבד.
+    </p>
+
+    <p class="login-sub">
+      (כאן תוסיפי לינקים לשאלונים, דוחות, קבצי אקסל/גוגל שיט, וכו׳)
+    </p>
+
+    <a href="{{ url_for('logout') }}" class="btn-primary" style="margin-top:14px; text-decoration:none;">
+      התנתקות
+    </a>
+  </div>
+</section>
+{% endblock %}
