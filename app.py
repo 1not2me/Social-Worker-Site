@@ -60,7 +60,7 @@ def lecturer_login():
         else:
             error = "סיסמה שגויה. אנא בדקו עם רואן."
 
-    return render_template("lecturer_login.html", error=error)
+    return render_template("login.html", error=error)
 
 
 # ---------- יציאה ----------
