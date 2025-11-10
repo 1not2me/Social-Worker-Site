@@ -1,1 +1,31 @@
+{% extends "base.html" %}
+{% block title %}כניסת מרצים{% endblock %}
+
+{% block content %}
+
+<section class="login-wrap">
+  <div class="login-card">
+    <div class="login-icon">🔒</div>
+    <h1>כניסת מרצים</h1>
+    <p class="login-sub">
+      כניסה מותרת רק עם מייל של מכללת צפת.
+    </p>
+
+    <form method="post" class="login-form">
+      <label>כתובת אימייל</label>
+      <input type="email" name="email" placeholder="your.name@zefat.ac.il" required>
+
+      <label>סיסמה</label>
+      <input type="password" name="password" placeholder="סיסמה" required>
+
+      <button type="submit" class="btn-primary full">התחבר</button>
+    </form>
+
+    <p class="login-note">
+      שימו לב: הגישה לפאנל המרצים מוגבלת למרצים בלבד.
+    </p>
+  </div>
+</section>
+
+{% endblock %}
 
