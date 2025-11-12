@@ -2,26 +2,33 @@
 {% block title %}הרשמת מרצים{% endblock %}
 
 {% block content %}
-<div class="login-wrap">
-  <div class="login-card">
-    <div class="login-icon">👤</div>
-    <h1>הרשמת מרצים</h1>
-    <p class="login-sub">צור חשבון חדש עם כתובת המייל המוסדית.</p>
+<section class="auth-page">
+  <form method="post" class="auth-form">
+    <div class="auth-icon">👤+</div>
+    <h2>הרשמת מרצים</h2>
+    <p>צור חשבון חדש עם כתובת המייל המוסדית</p>
 
-    <form method="post" class="login-form">
-      <label>כתובת דוא"ל מוסדית</label>
-      <input type="email" name="email" placeholder="lecturer@zefat.ac.il" required>
+    <div class="field">
+      <label for="email">כתובת דוא"ל מוסדית</label>
+      <input type="email" id="email" name="email" placeholder="lecturer@zefat.ac.il" required>
+      <div class="field-note">יש להשתמש בכתובת zefat.ac.il@</div>
+    </div>
 
-      <label>סיסמה (לפחות 6 תווים)</label>
-      <input type="password" name="password" minlength="6" required>
+    <div class="field">
+      <label for="password">סיסמה</label>
+      <input type="password" id="password" name="password" placeholder="לפחות 6 תווים" required>
+    </div>
+    
+    <div class="field">
+      <label for="password_confirm">אימות סיסמה</label>
+      <input type="password" id="password_confirm" name="password_confirm" placeholder="הזן סיסמה שוב" required>
+    </div>
 
-      <label>אימות סיסמה</label>
-      <input type="password" name="password_confirm" minlength="6" required>
+    <button type="submit" class="btn-primary full">הירשם</button>
 
-      <button type="submit" class="btn-primary full">הירשם</button>
-    </form>
-
-    <div class="login-note">כבר יש לך חשבון? <a href="{{ url_for('login') }}">התחבר כאן</a></div>
-  </div>
-</div>
+    <div class="auth-links">
+      <p>כבר יש לך חשבון? <a href="{{ url_for('login') }}">התחבר כאן</a></p>
+    </div>
+  </form>
+</section>
 {% endblock %}
