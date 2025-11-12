@@ -20,7 +20,7 @@
   </div>
   <div class="stat-card">
     <div class="stat-label">אחוז הצלחה</div>
-    <div class="stat-value">{{ stats.success_rate }}%</div>
+    <div class="stat-value">{{ stats.success_rate }}</div>
     <div class="stat-desc">מהשיבוצים</div>
   </div>
   <div class="stat-card">
@@ -33,8 +33,9 @@
 <section class="card" style="margin-top: 32px; text-align: center;">
   <h2>פעולות מהירות</h2>
   <div class="btn-row" style="justify-content: center;">
-    <a class="primary-btn" href="{{ url_for('analytics') }}">📈 ניתוח קובץ שיבוץ</a>
+    {# הסדר הוחלף לבקשתך #}
     <a class="primary-btn" href="{{ url_for('placement_system') }}" target="_blank">🧮 פתיחת מערכת השיבוץ</a>
+    <a class="primary-btn" href="{{ url_for('analytics') }}">📈 ניתוח קובץ שיבוץ</a>
   </div>
 </section>
 {% endblock %}
