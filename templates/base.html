@@ -2,60 +2,68 @@
 <html lang="he" dir="rtl">
 <head>
   <meta charset="utf-8">
-  <title>מערכת שיבוץ אוטומטית – דף הבית</title>
+  <title>{% block title %}מערכת שיבוץ אוטומטית{% endblock %}</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css', v=9) }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  {% block head %}{% endblock %}
 </head>
 <body>
 
-  <!-- טופ־בר -->
-  <header class="topbar">
-    <div class="logo-wrap">
-      <div class="logo-icon">🎓</div>
-      <div>
-        <div class="logo-title">מערכת שיבוץ אוטומטית</div>
-        <div class="logo-sub">מכללת צפת</div>
+<header class="topbar">
+  <a href="{{ url_for('index') }}" class="logo-wrap">
+    <div class="logo-icon">🎓</div>
+    <div class="logo-text">
+      <div class="logo-title">מערכת שיבוץ אוטומטית</div>
+      <div class="logo-sub">מכללת צפת</div>
+    </div>
+  </a>
+
+  <nav class="nav-links">
+    <a href="{{ url_for('index') }}">דף הבית</a>
+    <a href="{{ url_for('contact') }}">יצירת קשר</a>
+    <a href="{{ url_for('login') }}" class="btn-outline">כניסת מרצים</a>
+    <a href="{{ url_for('register') }}" class="btn-primary">הרשמה</a>
+  </nav>
+</header>
+
+<main>
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="flash-wrap">
+        {% for cat, msg in messages %}
+          <div class="flash {{ cat }}">{{ msg }}</div>
+        {% endfor %}
       </div>
-    </div>
-    <nav class="nav-links">
-      <a href="{{ url_for('index') }}">דף הבית</a>
-      <a href="{{ url_for('contact') }}">יצירת קשר</a>
-      <a href="{{ url_for('register') }}">הרשמה</a>
-      <a href="{{ url_for('login') }}" class="btn-outline">כניסת מרצים</a>
-    </nav>
-  </header>
+    {% endif %}
+  {% endwith %}
 
-  <!-- הירו -->
-  <section class="hero">
-    <div class="hero-label">✨ מערכת חכמה לשיבוץ סטודנטים</div>
-    <h1>מערכת שיבוץ אוטומטית</h1>
-    <p class="hero-sub">הגישה למערכת השיבוץ מוגבלת למרצים בלבד.</p>
-    <div class="hero-actions">
-      <a class="btn-primary" href="{{ url_for('login') }}">🔐 כניסת מרצים</a>
-      <a class="btn-ghost" href="{{ url_for('contact') }}">צור/צרי קשר</a>
-    </div>
-  </section>
+  {% block content %}{% endblock %}
+</main>
 
-  <!-- אפשר להשאיר ריק או להוסיף סקשנים נוספים שמתאימים ל-CSS שלך -->
-
-  <footer class="site-footer">
-    <div class="footer-col">
-      <h3>מערכת שיבוץ אוטומטית</h3>
-      <a href="https://www.studentssurvey.org" target="_blank">שאלון סטודנט</a>
-      <a href="https://www.studentsplacement.org" target="_blank">מיפוי מדריכים</a>
-      <a href="{{ url_for('index') }}">מערכת השיבוץ</a>
-    </div>
-    <div class="footer-col">
-      <h3>פרטי התקשרות</h3>
-      <p>social@zefat.ac.il</p>
-      <p>04-6821111</p>
-      <p>מכללת צפת, ישראל</p>
-    </div>
-    <div class="footer-bottom">© 2025 מכללת צפת – כל הזכויות שמורות.</div>
-  </footer>
+<footer class="site-footer">
+  <div class="footer-col">
+    <h3>מערכת שיבוץ אוטומטית</h3>
+    <p>מערכת חכמה לשיבוץ אוטומטי של סטודנטים למקומות התמחות בעבודה סוציאלית.</p>
+  </div>
+  <div class="footer-col">
+    <h3>קישורים מהירים</h3>
+    <a href="https://www.studentssurvey.org" target="_blank" rel="noopener noreferrer">שאלון סטודנט</a>
+    <a href="https://www.studentsplacement.org" target="_blank" rel="noopener noreferrer">מיפוי מדריכים</a>
+    <a href="{{ url_for('index') }}">מערכת השיבוץ</a>
+  </div>
+  <div class="footer-col">
+    <h3>פרטי התקשרות</h3>
+    <p>social@zefat.ac.il</p>
+    <p>04-6821111</p>
+    <p>מכללת צפת, ישראל</p>
+  </div>
+  <div class="footer-bottom">
+    © 2025 מכללת צפת – החוג לעבודה סוציאלית. כל הזכויות שמורות.
+  </div>
+</footer>
 
 </body>
 </html>
