@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 import os
 from datetime import timedelta
-from flask import (
-    Flask, render_template, request, redirect, url_for,
-    flash, Markup, session, send_file
-)
+from flask import Flask, render_template, request, redirect, url_for, flash, session, send_file
+from markupsafe import Markup
 import pandas as pd
 
 app = Flask(__name__)
