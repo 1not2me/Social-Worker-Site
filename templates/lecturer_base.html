@@ -16,48 +16,61 @@
       padding: 16px 32px;
       border-bottom: 1px solid #e5e7eb;
       display: flex;
-      justify-content: space-between;
+      justify-content: center; /* ממורכז */
       align-items: center;
+      position: relative;
     }
     .lecturer-logo { display: flex; align-items: center; gap: 12px; text-decoration: none; color: inherit; }
-    /* .lecturer-logo .logo-icon הוסר */
-    .lecturer-logo .logo-image { /* סגנון חדש לתמונה */
+    .lecturer-logo .logo-image { /* סגנון לתמונה */
         width: 38px;
         height: 38px;
         object-fit: contain; /* כדי שהלוגו לא יתעוות */
     }
     .lecturer-logo .logo-title { font-size: 18px; font-weight: 700; }
-    .lecturer-nav { display: flex; gap: 16px; align-items: center; }
+    .lecturer-nav { 
+      display: flex; 
+      gap: 16px; 
+      align-items: center; 
+      position: absolute; /* ממוקם בצד */
+      left: 32px; 
+    }
     .lecturer-nav a { text-decoration: none; color: #374151; font-weight: 500; }
     .lecturer-nav a.btn-outline {
         padding: 6px 12px;
         border: 1px solid #d1d5db;
         border-radius: 6px;
     }
-    .lecturer-nav a.btn-primary {
-        padding: 6px 12px;
-        border-radius: 6px;
-    }
+    /* .btn-primary לא בשימוש יותר בניווט זה */
     .lecturer-content {
       max-width: 1200px;
       margin: 32px auto;
       padding: 0 32px;
     }
+    
+    /* התאמת רספונסיביות */
+    @media (max-width: 900px) {
+      .lecturer-header {
+        flex-direction: column;
+        gap: 12px;
+        position: static;
+      }
+      .lecturer-nav {
+        position: static;
+        left: auto;
+      }
+    }
   </style>
   {% block head %}{% endblock %}
 </head>
-<body>
+<body class="lecturer-area"> {# הוספתי קלאס כדי שהסגנונות למעלה יעבדו #}
 
 <header class="lecturer-header">
   <a href="{{ url_for('dashboard') }}" class="lecturer-logo">
-    {# החלף את ה-div עם ה-emoji בתגית img עם הלוגו #}
     <img src="{{ url_for('static', filename='images/zefat_college_logo.png') }}" alt="לוגו מכללת צפת" class="logo-image">
     <div class="logo-title">מערכת שיבוץ (מרצים)</div>
   </a>
   <nav class="lecturer-nav">
     <a href="{{ url_for('dashboard') }}">פנאל מרצים</a>
-    <a href="{{ url_for('analytics') }}">ניתוח שיבוץ</a>
-    <a href="{{ url_for('placement_system') }}" class="btn-primary" target="_blank">🧮 פתיחת מערכת השיבוץ</a>
     <a href="{{ url_for('logout') }}" class="btn-outline">יציאה</a>
   </nav>
 </header>
@@ -67,4 +80,14 @@
     {% if messages %}
       <div class="flash-wrap">
         {% for cat, msg in messages %}
-          <div class="flash {{ cat }}">{{
+          <div class="flash {{ cat }}">{{ msg }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+  
+  {% block content %}{% endblock %}
+</main>
+
+</body>
+</html>
