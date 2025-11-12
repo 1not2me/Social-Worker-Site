@@ -1,15 +1,52 @@
+# -*- coding: utf-8 -*-
 from flask import Flask, render_template, request, redirect, url_for, flash, session
-from markupsafe import Markup  # <-- התיקון כאן
+from markupsafe import Markup
 import os
 from whitenoise import WhiteNoise
+import gspread  # <-- ייבוא חדש
+from google.oauth2.service_account import Credentials  # <-- ייבוא חדש
+import json  # <-- ייבוא חדש
+import logging  # <-- ייבוא חדש לניפוי שגיאות
 
 app = Flask(__name__)
-# ודא שמפתח זה מוגדר כמשתנה סביבה בסביבת הפרודקשן שלך
 app.config['SECRET_KEY'] = os.getenv("FLASK_SECRET_KEY", "change-this-key-in-development")
+app.wsgi_app = WhiteNoise(app.wsgi_app, root='static/', prefix='static/') # הגדרת WhiteNoise
+logging.basicConfig(level=logging.INFO)  # הדפסת מידע ללוגים
 
+# --- שמות הקבצים בגוגל שיטס (לפי התמונה ששלחת) ---
+STUDENT_SHEET_NAME = "שאלון סטודנטים"
+MENTOR_SHEET_NAME = "מיפוי מדריכים"
+
+# --- פונקציית חיבור לגוגל ---
+def get_google_sheets_client(env_var_name):
+    """
+    מתחבר ל-Google Sheets API באמצעות משתנה סביבה ספציפי (GCP_CREDS או GCP_CREDS_2)
+    """
+    try:
+        creds_json = os.getenv(env_var_name)
+        if not creds_json:
+            logging.error(f"משתנה סביבה {env_var_name} לא הוגדר או שהוא ריק.")
+            return None
+        
+        creds_dict = json.loads(creds_json)
+        SCOPES = [
+            'https://www.googleapis.com/auth/spreadsheets',
+            'https://www.googleapis.com/auth/drive.file'
+        ]
+        creds = Credentials.from_service_account_info(creds_dict, scopes=SCOPES)
+        client = gspread.authorize(creds)
+        logging.info(f"התחברות ל-Google Sheets דרך {env_var_name} הצליחה")
+        return client
+    except json.JSONDecodeError:
+        logging.error(f"שגיאה בפענוח ה-JSON מ-{env_var_name}. בדוק שהעתקת את כל הקובץ.")
+        return None
+    except Exception as e:
+        logging.error(f"שגיאה בהתחברות ל-Google דרך {env_var_name}: {e}")
+        return None
+
+# --- מצב תחזוקה ---
 @app.before_request
 def maintenance_mode():
-    # בודק אם אנחנו לא בנתיב של מרצה (כדי לא לנעול מרצים בחוץ)
     if not request.path.startswith('/lecturer') and not request.path.startswith('/login'):
         if os.getenv("MAINTENANCE_MODE", "0") == "1":
             html = """
@@ -18,23 +55,8 @@ def maintenance_mode():
               <meta charset="utf-8">
               <title>האתר סגור</title>
               <style>
-                body{
-                  font-family:system-ui,-apple-system,Segoe UI,Heebo,Arial;
-                  background:#f8fafc;
-                  direction:rtl;
-                  text-align:center;
-                  margin:0;
-                  padding-top:120px;
-                  color:#111827;
-                }
-                .box{
-                  display:inline-block;
-                  padding:32px 40px;
-                  border-radius:18px;
-                  background:#ffffff;
-                  box-shadow:0 10px 30px rgba(15,23,42,.08);
-                  border:1px solid #e5e7eb;
-                }
+                body{ font-family:system-ui,-apple-system,Segoe UI,Heebo,Arial; background:#f8fafc; direction:rtl; text-align:center; margin:0; padding-top:120px; color:#111827; }
+                .box{ display:inline-block; padding:32px 40px; border-radius:18px; background:#ffffff; box-shadow:0 10px 30px rgba(15,23,42,.08); border:1px solid #e5e7eb; }
                 h1{margin:0 0 12px;font-size:26px;}
                 p{margin:0;color:#6b7280;}
               </style>
@@ -50,28 +72,22 @@ def maintenance_mode():
             return Markup(html), 503
 
 # --- דפים ציבוריים ---
-
 @app.route("/")
 def index():
-    # דף הבית הראשי הוא 'matching.html' כפי שמופיע בתמונות
     return render_template("matching.html")
 
 @app.route("/contact", methods=["GET", "POST"])
 def contact():
     if request.method == "POST":
-        # לוגיקת שליחת אימייל (דמו)
         flash("הפנייה נשלחה בהצלחה! נחזור אליך בהקדם.", "success")
         return redirect(url_for("contact"))
     return render_template("contact.html")
 
 # --- תהליך אימות מרצים ---
-
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
         email = request.form.get("email")
-        password = request.form.get("password")
-        # כאן תוסיף לוגיקה לשמירת המשתמש במסד נתונים
         flash(f"הרשמה עבור {email} נקלטה (דמו).", "success")
         return redirect(url_for("login"))
     return render_template("register.html")
@@ -81,38 +97,27 @@ def login():
     if request.method == "POST":
         email = request.form.get("email")
         password = request.form.get("password")
-        # כאן תוסיף לוגיקה לבדיקת אימייל וסיסמה מול מסד נתונים
-        
-        # אם האימייל והסיסמה נכונים (בדמו, אנחנו מדלגים לבדיקה הבאה)
         if email and password:
-            # שמור ב-session שהשלב הראשון עבר בהצלחה
             session['awaiting_secret_auth'] = email
             return redirect(url_for("verify_secret"))
         else:
             flash("נא למלא אימייל וסיסמה.", "error")
-            
     return render_template("login.html")
 
 @app.route("/verify-secret", methods=["GET", "POST"])
 def verify_secret():
-    # אם המשתמש לא עבר את שלב 1 (לוגין), החזר אותו לשם
     if 'awaiting_secret_auth' not in session:
         return redirect(url_for("login"))
-
     if request.method == "POST":
         secret = request.form.get("secret_password")
-        # טען את הסיסמה הסודית ממשתני הסביבה
         LECTURER_SECRET = os.getenv("LECTURER_SECRET")
-
         if secret == LECTURER_SECRET:
-            # האימות הושלם!
-            session.pop('awaiting_secret_auth', None) # נקה את הסמן הזמני
-            session['lecturer_email'] = session.get('awaiting_secret_auth', 'lecturer@zefat.ac.il') # שמור את המשתמש ב-session
+            session['lecturer_email'] = session.get('awaiting_secret_auth', 'lecturer@zefat.ac.il')
+            session.pop('awaiting_secret_auth', None)
             flash("התחברת בהצלחה!", "success")
             return redirect(url_for("dashboard"))
         else:
             flash("סיסמת מרצים סודית שגויה.", "error")
-            
     return render_template("verify_secret.html")
 
 @app.route("/logout")
@@ -122,25 +127,57 @@ def logout():
     return redirect(url_for("index"))
 
 # --- אזור מרצים מחוברים ---
-
-# פונקציית עזר לבדיקת התחברות
 def check_auth():
     if 'lecturer_email' not in session:
         flash("נא להתחבר למערכת המרצים תחילה.", "error")
         return redirect(url_for("login"))
-    return None # מאושר
+    return None
 
 @app.route("/dashboard")
 def dashboard():
     auth_redirect = check_auth()
     if auth_redirect: return auth_redirect
     
-    # כאן תטען נתונים אמיתיים מה-DB
+    # --- ✨ קריאה לסטודנטים עם חשבון 1 (GCP_CREDS) ✨ ---
+    client_students = get_google_sheets_client("GCP_CREDS")
+    student_count = 0
+    if client_students:
+        try:
+            student_sheet = client_students.open(STUDENT_SHEET_NAME).sheet1
+            student_count = len(student_sheet.get_all_records()) # סופר שורות עם נתונים
+            logging.info(f"נמצאו {student_count} סטודנטים")
+        except gspread.exceptions.SpreadsheetNotFound:
+            logging.error(f"שגיאה: לא ניתן למצוא קובץ סטודנטים בשם '{STUDENT_SHEET_NAME}'")
+            flash(f"שגיאה: לא ניתן למצוא את קובץ הסטודנטים '{STUDENT_SHEET_NAME}'.", "error")
+        except Exception as e:
+            logging.error(f"שגיאה בקריאת קובץ סטודנטים: {e}")
+            flash("שגיאה בקריאת קובץ סטודנטים. בדוק הרשאות עבור GCP_CREDS.", "error")
+
+    # --- ✨ קריאה למדריכים עם חשבון 2 (GCP_CREDS_2) ✨ ---
+    client_mentors = get_google_sheets_client("GCP_CREDS_2")
+    mentor_count = 0
+    if client_mentors:
+        try:
+            mentor_sheet = client_mentors.open(MENTOR_SHEET_NAME).sheet1
+            mentor_count = len(mentor_sheet.get_all_records()) # סופר שורות עם נתונים
+            logging.info(f"נמצאו {mentor_count} מדריכים")
+        except gspread.exceptions.SpreadsheetNotFound:
+            logging.error(f"שגיאה: לא ניתן למצוא קובץ מדריכים בשם '{MENTOR_SHEET_NAME}'")
+            flash(f"שגיאה: לא ניתן למצוא את קובץ המדריכים '{MENTOR_SHEET_NAME}'.", "error")
+        except Exception as e:
+            logging.error(f"שגיאה בקריאת קובץ מדריכים: {e}")
+            flash("שגיאה בקריאת קובץ מדריכים. בדוק הרשאות עבור GCP_CREDS_2.", "error")
+
+    # (נתוני דמו לשאר המדדים)
+    placement_count = 0 
+    success_rate_val = 0
+    success_rate_str = f"{success_rate_val}%"
+
     stats = {
-        "registered_students": 0,
-        "registered_mentors": 0,
-        "success_rate": 0,
-        "placements_done": 0
+        "registered_students": student_count,
+        "registered_mentors": mentor_count,
+        "success_rate": success_rate_str,
+        "placements_done": placement_count
     }
     return render_template("dashboard.html", stats=stats)
 
@@ -148,39 +185,16 @@ def dashboard():
 def analytics():
     auth_redirect = check_auth()
     if auth_redirect: return auth_redirect
-
     if request.method == "POST":
         results_file = request.files.get('results_file')
         if not results_file:
             return render_template("analytics.html", error="לא נבחר קובץ.")
         
-        # כאן תהיה הלוגיקה של ניתוח הקובץ (pandas, etc.)
-        # ...
+        # ... כאן תהיה הלוגיקה של ניתוח הקובץ ...
         
-        # בדמו, נציג נתונים מזויפים
-        tables = {
-            "cols": {"site": "מקום הכשרה", "field": "תחום התמחות"},
-            "by_site": [
-                {"מקום הכשרה": "בית חולים א'", "מספר סטודנטים": 5},
-                {"מקום הכשרה": "לשכת רווחה ב'", "מספר סטודנטים": 3}
-            ],
-            "by_field": [
-                {"תחום התמחות": "ילד ונוער", "מספר סטודנטים": 4},
-                {"תחום התמחות": "קשישים", "מספר סטודנטים": 4}
-            ],
-            "score_avg": [
-                {"מקום הכשרה": "בית חולים א'", "ממוצע התאמה": "85.0%"},
-                {"מקום הכשרה": "לשכת רווחה ב'", "ממוצע התאמה": "92.5%"}
-            ]
-        }
-        charts = {
-            "site_labels": ["בית חולים א'", "לשכת רווחה ב'"],
-            "site_values": [5, 3],
-            "field_labels": ["ילד ונוער", "קשישים"],
-            "field_values": [4, 4],
-            "avg_labels": ["בית חולים א'", "לשכת רווחה ב'"],
-            "avg_values": [85.0, 92.5]
-        }
+        # נתוני דמו להצגה
+        tables = { "cols": {"site": "מקום הכשרה", "field": "תחום התמחות"}, "by_site": [], "by_field": [], "score_avg": [] }
+        charts = { "site_labels": [], "site_values": [], "field_labels": [], "field_values": [], "avg_labels": [], "avg_values": [] }
         return render_template("analytics.html", tables=tables, charts=charts)
 
     return render_template("analytics.html")
@@ -189,8 +203,6 @@ def analytics():
 def placement_system():
     auth_redirect = check_auth()
     if auth_redirect: return auth_redirect
-    
-    # קישור חיצוני למערכת השיבוץ
     return redirect("https://www.studentsplacement.org/")
 
 # --- דפי דמו ישנים (אם צריך) ---
