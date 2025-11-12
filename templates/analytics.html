@@ -6,25 +6,31 @@
 {% endblock %}
 
 {% block content %}
-<div class="page-header">
+<div class="page-header" style="text-align: center;">
   <h1>ניתוחים סטטיסטיים</h1>
   <p class="subtitle">העלו את קובץ ה-CSV/XLSX של תוצאות השיבוץ (כמו הקובץ שמורידים מהמערכת).</p>
 </div>
 
-<div class="card" style="max-width: 700px; margin-bottom: 24px;">
-  <form method="post" enctype="multipart/form-data" class="upload-form simple">
-    <div class="field">
-      <label>קובץ תוצאות שיבוץ (CSV/XLSX)</label>
-      <input type="file" name="results_file" required>
+<div class="card" style="max-width: 700px; margin: 24px auto;">
+  <form method="post" enctype="multipart/form-data" class="upload-form simple" style="align-items: center; gap: 16px;">
+    
+    <div class="field" style="width: 100%; text-align: center;">
+      <label for="results_file_input" class="btn-outline">
+        📁 בחר קובץ...
+      </label>
+      <input type="file" name="results_file" id="results_file_input" required>
+      <div id="file-name-display" class="field-note" style="margin-top: 10px;">לא נבחר קובץ</div>
     </div>
+    
     <div class="btn-wrap">
       <button class="primary-btn" type="submit">נתח קובץ</button>
     </div>
+    
   </form>
 </div>
 
 {% if error %}
-  <div class="alert error">{{ error }}</div>
+  <div class="alert error" style="max-width: 700px; margin: 16px auto;">{{ error }}</div>
 {% endif %}
 
 {% if tables %}
@@ -113,4 +119,12 @@
     }
   </script>
 {% endif %}
+
+<script>
+  document.getElementById('results_file_input').addEventListener('change', function() {
+    var fileName = this.files[0] ? this.files[0].name : 'לא נבחר קובץ';
+    document.getElementById('file-name-display').textContent = fileName;
+  });
+</script>
+
 {% endblock %}
