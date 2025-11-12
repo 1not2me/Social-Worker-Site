@@ -645,3 +645,39 @@ table tr:nth-child(even) {
         grid-template-columns: 1fr;
     }
 }
+/* כאן יהיה כל קוד ה-CSS המלא והמעודכן שסיפקתי לך קודם, עם התוספות הבאות בסוף */
+
+/* --- כפתורים כלליים --- */
+/* כל הקוד של .btn-primary, .btn-ghost וכו' יבוא כאן */
+/* ... (הקוד הקיים מ-style.css שלך) ... */
+
+/* הוספה/עדכון של primary-btn כדי שישתמש בעיצוב הראשי */
+.primary-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 32px; /* או פחות, תלוי בגודל הרצוי */
+  border-radius: 999px;
+  font-size: 16px;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+  border: none;
+  transition: all .22s ease;
+  box-shadow: var(--shadow-soft);
+  background: linear-gradient(to right, var(--primary), var(--accent));
+  color: #fff;
+  gap: 8px; /* רווח בין טקסט לאימוג'י */
+}
+
+.primary-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 14px 40px rgba(215,111,212,.32);
+}
+
+.btn-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px; /* רווח בין הכפתורים */
+}
+
