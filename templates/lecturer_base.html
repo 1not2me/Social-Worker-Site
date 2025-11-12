@@ -16,9 +16,9 @@
       padding: 16px 32px;
       border-bottom: 1px solid #e5e7eb;
       display: flex;
-      justify-content: center; /* ממורכז */
+      justify-content: space-between; /* הוחזר ליישור קצוות */
       align-items: center;
-      position: relative;
+      /* position: relative; הוסר */
     }
     .lecturer-logo { display: flex; align-items: center; gap: 12px; text-decoration: none; color: inherit; }
     .lecturer-logo .logo-image { /* סגנון לתמונה */
@@ -31,8 +31,8 @@
       display: flex; 
       gap: 16px; 
       align-items: center; 
-      position: absolute; /* ממוקם בצד */
-      left: 32px; 
+      /* position: absolute; הוסר */
+      /* left: 32px; הוסר */
     }
     .lecturer-nav a { text-decoration: none; color: #374151; font-weight: 500; }
     .lecturer-nav a.btn-outline {
@@ -40,7 +40,6 @@
         border: 1px solid #d1d5db;
         border-radius: 6px;
     }
-    /* .btn-primary לא בשימוש יותר בניווט זה */
     .lecturer-content {
       max-width: 1200px;
       margin: 32px auto;
@@ -52,17 +51,17 @@
       .lecturer-header {
         flex-direction: column;
         gap: 12px;
-        position: static;
+        /* position: static; לא נחוץ */
       }
       .lecturer-nav {
-        position: static;
-        left: auto;
+        /* position: static; לא נחוץ */
+        /* left: auto; לא נחוץ */
       }
     }
   </style>
   {% block head %}{% endblock %}
 </head>
-<body class="lecturer-area"> {# הוספתי קלאס כדי שהסגנונות למעלה יעבדו #}
+<body class="lecturer-area">
 
 <header class="lecturer-header">
   <a href="{{ url_for('dashboard') }}" class="lecturer-logo">
