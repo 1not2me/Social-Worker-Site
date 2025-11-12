@@ -14,7 +14,8 @@
 
 <header class="topbar">
   <a href="{{ url_for('index') }}" class="logo-wrap">
-    <div class="logo-icon">🎓</div>
+    {# החלף את ה-div עם ה-emoji בתגית img עם הלוגו #}
+    <img src="{{ url_for('static', filename='images/zefat_college_logo.png') }}" alt="לוגו מכללת צפת" class="logo-image">
     <div class="logo-text">
       <div class="logo-title">מערכת שיבוץ אוטומטית</div>
       <div class="logo-sub">מכללת צפת</div>
@@ -51,7 +52,7 @@
   <div class="footer-col">
     <h3>קישורים מהירים</h3>
     <a href="https://www.studentssurvey.org" target="_blank" rel="noopener noreferrer">שאלון סטודנט</a>
-    <a href="https://www.studentsplacement.org" target="_blank" rel="noopener noreferrer">מיפוי מדריכים</a>
+    <a href="https://mentormappingsurvey.org" target="_blank" rel="noopener noreferrer">מיפוי מדריכים</a>
     <a href="{{ url_for('index') }}">מערכת השיבוץ</a>
   </div>
   <div class="footer-col">
