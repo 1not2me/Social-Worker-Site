@@ -1,13 +1,7 @@
 {% extends "base.html" %}
-<!doctype html>
-<html lang="he" dir="rtl">
-<head>
-  <meta charset="utf-8">
-  <title>ניתוחים סטטיסטיים למרצים</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-</head>
-<body>
+{% block title %}ניתוחים סטטיסטיים למרצים{% endblock %}
+
+{% block content %}
   <div class="page-wrap">
     <h1>ניתוחים סטטיסטיים</h1>
     <p class="subtitle">העלו את קובץ ה-CSV/XLSX של תוצאות השיבוץ (כמו הקובץ שמורידים מהמערכת).</p>
@@ -23,7 +17,7 @@
     </form>
 
     {% if error %}
-      <div class="alert error">{{ error }}</div>
+      <div class="flash error">{{ error }}</div>
     {% endif %}
 
     {% if tables %}
@@ -88,23 +82,21 @@
         {% endif %}
       </section>
 
+      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
       <script>
         const charts = {{ charts|tojson }};
-        const ctx1 = document.getElementById('chartSites');
-        new Chart(ctx1, {
+        new Chart(document.getElementById('chartSites'), {
           type: 'bar',
           data: { labels: charts.site_labels, datasets: [{ label: 'מספר סטודנטים', data: charts.site_values }] },
           options: { responsive: true }
         });
-        const ctx2 = document.getElementById('chartFields');
-        new Chart(ctx2, {
+        new Chart(document.getElementById('chartFields'), {
           type: 'bar',
           data: { labels: charts.field_labels, datasets: [{ label: 'מספר סטודנטים', data: charts.field_values }] },
           options: { responsive: true }
         });
         if (charts.avg_labels && charts.avg_labels.length){
-          const ctx3 = document.getElementById('chartAvg');
-          new Chart(ctx3, {
+          new Chart(document.getElementById('chartAvg'), {
             type: 'line',
             data: { labels: charts.avg_labels, datasets: [{ label: 'ממוצע התאמה', data: charts.avg_values }] },
             options: { responsive: true }
@@ -113,6 +105,4 @@
       </script>
     {% endif %}
   </div>
-</body>
-</html>
 {% endblock %}
