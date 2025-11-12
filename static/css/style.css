@@ -47,12 +47,13 @@ body {
   top:0;
   z-index:20;
   display:flex;
-  justify-content:space-between;
+  justify-content:center; /* שונה למרכוז */
   align-items:center;
   padding:14px 7vw;
   background-color:rgba(255,255,255,0.96);
   backdrop-filter:blur(16px);
   box-shadow:0 2px 12px rgba(0,0,0,.02);
+  position: relative; /* הוסף עבור מיקום הניווט */
 }
 .logo-wrap {
   display:flex;
@@ -61,16 +62,10 @@ body {
   text-decoration: none;
   color: inherit;
 }
-.logo-icon {
-  width:32px;
-  height:32px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  border-radius:999px;
-  background:linear-gradient(145deg,var(--accent),var(--primary));
-  color:#fff;
-  font-size:18px;
+.logo-image { /* סגנון חדש ללוגו */
+  width: 38px;
+  height: 38px;
+  object-fit: contain;
 }
 .logo-title {
   font-weight:700;
@@ -85,6 +80,8 @@ body {
   gap:18px;
   align-items:center;
   font-size:15px;
+  position: absolute; /* שונה למיקום מוחלט */
+  left: 7vw; /* יישור לשמאל */
 }
 .nav-links a {
   text-decoration:none;
@@ -160,7 +157,8 @@ body {
 .btn-primary,
 .btn-ghost,
 .btn-light,
-.btn-light-outline {
+.btn-light-outline,
+.primary-btn { /* הוספנו .primary-btn לרשימה */
   display:inline-flex;
   align-items:center;
   justify-content:center;
@@ -174,6 +172,8 @@ body {
   transition:all .22s ease;
   box-shadow:var(--shadow-soft);
 }
+
+/* כפתור סגול ראשי (דף בית) */
 .btn-primary {
   background:linear-gradient(to right, var(--primary), var(--accent));
   color:#fff;
@@ -182,6 +182,19 @@ body {
   transform:translateY(-1px);
   box-shadow:0 14px 40px rgba(215,111,212,.32);
 }
+
+/* כפתור סגול משני (דשבורד) - זהה לראשון */
+.primary-btn {
+  background: linear-gradient(to right, var(--primary), var(--accent));
+  color: #fff;
+  gap: 8px; /* רווח בין טקסט לאימוג'י */
+}
+.primary-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 14px 40px rgba(215,111,212,.32);
+}
+
+/* כפתור לבן */
 .btn-ghost {
   background:#fff;
   color:var(--accent);
@@ -189,6 +202,8 @@ body {
 .btn-ghost:hover {
   background:#f7f3ff;
 }
+
+/* כפתורים ב-CTA */
 .btn-light {
   background:#fff;
   color:var(--primary-dark);
@@ -198,13 +213,14 @@ body {
   color:#fff;
   border:1px solid #ffe6ff;
 }
+
 .btn-primary.full {
   width: 100%;
 }
 .btn-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: 16px; /* רווח בין הכפתורים */
 }
 
 
@@ -506,8 +522,9 @@ body.lecturer-area {
   padding: 16px 32px;
   border-bottom: 1px solid #e5e7eb;
   display: flex;
-  justify-content: space-between;
+  justify-content:center; /* שונה למרכוז */
   align-items: center;
+  position: relative; /* הוסף עבור מיקום הניווט */
 }
 .lecturer-logo { 
   display: flex; 
@@ -516,9 +533,10 @@ body.lecturer-area {
   text-decoration: none; 
   color: inherit; 
 }
-.lecturer-logo .logo-icon { 
-  font-size: 28px; 
-  width: 38px; height: 38px;
+.lecturer-logo .logo-image { /* סגנון חדש ללוגו */
+  width: 38px;
+  height: 38px;
+  object-fit: contain;
 }
 .lecturer-logo .logo-title { 
   font-size: 18px; 
@@ -528,6 +546,8 @@ body.lecturer-area {
   display: flex; 
   gap: 16px; 
   align-items: center; 
+  position: absolute; /* שונה למיקום מוחלט */
+  left: 32px; /* יישור לשמאל */
 }
 .lecturer-nav a { 
   text-decoration: none; 
@@ -603,8 +623,15 @@ table tr:nth-child(even) {
 
 /* --- Responsive --- */
 @media (max-width:900px) {
-  .topbar { padding: 14px 24px; }
-  .nav-links { display: none; } /* הסתרת ניווט מורכב במובייל, דורש כפתור המבורגר */
+  .topbar { 
+    padding: 14px 24px; 
+    position: static; /* בטל מיקום יחסי במובייל */
+  }
+  .nav-links { 
+    display: none; /* הסתרת ניווט מורכב במובייל */
+    position: static; /* בטל מיקום אבסולוטי */
+    left: auto;
+  } 
 
   section { padding: 40px 24px; }
   .hero { padding: 50px 24px 40px; }
@@ -628,11 +655,14 @@ table tr:nth-child(even) {
     padding: 16px;
     flex-direction: column;
     gap: 12px;
+    position: static; /* בטל מיקום יחסי */
   }
   .lecturer-nav {
     flex-wrap: wrap;
     justify-content: center;
     gap: 10px;
+    position: static; /* בטל מיקום אבסולוטי */
+    left: auto;
   }
   .lecturer-content {
     margin: 16px auto;
@@ -645,39 +675,3 @@ table tr:nth-child(even) {
         grid-template-columns: 1fr;
     }
 }
-/* כאן יהיה כל קוד ה-CSS המלא והמעודכן שסיפקתי לך קודם, עם התוספות הבאות בסוף */
-
-/* --- כפתורים כלליים --- */
-/* כל הקוד של .btn-primary, .btn-ghost וכו' יבוא כאן */
-/* ... (הקוד הקיים מ-style.css שלך) ... */
-
-/* הוספה/עדכון של primary-btn כדי שישתמש בעיצוב הראשי */
-.primary-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 14px 32px; /* או פחות, תלוי בגודל הרצוי */
-  border-radius: 999px;
-  font-size: 16px;
-  font-weight: 500;
-  text-decoration: none;
-  cursor: pointer;
-  border: none;
-  transition: all .22s ease;
-  box-shadow: var(--shadow-soft);
-  background: linear-gradient(to right, var(--primary), var(--accent));
-  color: #fff;
-  gap: 8px; /* רווח בין טקסט לאימוג'י */
-}
-
-.primary-btn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 14px 40px rgba(215,111,212,.32);
-}
-
-.btn-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px; /* רווח בין הכפתורים */
-}
-
