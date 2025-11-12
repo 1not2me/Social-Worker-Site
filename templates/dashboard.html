@@ -32,9 +32,10 @@
 
 <section class="card" style="margin-top: 32px;">
   <h2>פעולות מהירות</h2>
-  <div class="btn-row" style="justify-content: flex-start;"> {# הסרתי את gap: 16px; כי הוא כבר מוגדר ב-CSS למעלה #}
-    <a class="primary-btn" href="{{ url_for('analytics') }}">📈 ניתוח קובץ שיבוץ</a> {# הוספתי אימוג'י #}
-    <a class="primary-btn" href="{{ url_for('placement_system') }}" target="_blank">🧮 פתיחת מערכת השיבוץ</a> {# הוספתי אימוג'י #}
+  <div class="btn-row" style="justify-content: flex-start;">
+    <a class="primary-btn" href="{{ url_for('analytics') }}">📈 ניתוח קובץ שיבוץ</a>
+    <a class="primary-btn" href="{{ url_for('placement_system') }}" target="_blank">🧮 פתיחת מערכת השיבוץ</a>
+    <a class="primary-btn" href="https://mentormappingsurvey.org" target="_blank">📍 מיפוי מדריכים</a>
   </div>
 </section>
 {% endblock %}
